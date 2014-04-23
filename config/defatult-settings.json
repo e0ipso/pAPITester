@@ -1,0 +1,42 @@
+/**
+ * This is the default configuration file. This file is not used, it is here
+ * only for documentation purposes. Copy this to be settings.json and the app
+ * will use it as a default if no other confiruation is specified. You can have
+ * as many configuration files as you need, specify the configuration file to
+ * load with the command line options.
+ */
+{
+  host: {
+    url: {
+      // Protocol used when building the URL for the call.
+      protocol: 'http',
+      // Host name used when building the URL for the call.
+      hostname: 'www.example.org',
+      // Endpoint used when building the URL for the call. Used for scoping
+      // purposes.
+      endpoint: '/api',
+      // Leave it at null to use the default port depending on the selected
+      // protocol. 80 for http and 443 for https.
+      port: null
+    }
+    authentication: {
+      type: 'oauth', // Supported: none, oauth, basic
+      settings: { // Will depend on the type.
+        version: 2,
+        clientId: '',
+        clientSecred: ''
+      }
+    }
+  }
+  client: {
+    verboseLevel: 2, // 0: silent, 1: log, 2: chatty
+    // Output format when displaying info in the screen. Only supports json.
+    outputFormat: 'json'
+  },
+  network: {
+    // These headers will be used when making a request.
+    headers: {
+      'Claim': 'Built by robots at Lullabot.'
+    }
+  }
+}
