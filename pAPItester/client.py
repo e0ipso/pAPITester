@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import argparse
 import json
 from urllib2 import Request
