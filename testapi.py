@@ -1,14 +1,14 @@
 #!/usr/bin/python
 
-import src.client
+import pAPItester.client
 import json
-import re
 
 def main():
-  args = src.client.getArguments()
+  args = pAPItester.client.getArguments()
   try:
     json_data = open(args.config_file).read()
-    print json.loads(json_data)
+    parsed_object = json.loads(json_data)
+    print parsed_object
   except IOError as e:
     print "I/O error({0}): {1}".format(e.errno, e.strerror)
 
