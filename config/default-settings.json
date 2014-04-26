@@ -1,0 +1,27 @@
+{
+  "host": {
+    "url": {
+      "protocol": "http",
+      "hostname": "www.example.org",
+      "endpoint": "/api",
+      "port": null
+    },
+    "authentication": {
+      "type": "oauth",
+      "settings": {
+        "version": 2,
+        "clientId": "",
+        "clientSecret": ""
+      }
+    }
+  },
+  "client": {
+    "verboseLevel": 2,
+    "outputFormat": "json"
+  },
+  "network": {
+    "headers": {
+      "Claim": "Built by robots at Lullabot."
+    }
+  }
+}
