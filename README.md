@@ -34,5 +34,11 @@ load with the command line options.
   * `client`: Configuration about how the client app should behave.
     * `verboseLevel`: Output format when displaying info in the screen. Only supports json. 0: silent, 1: log, 2: chatty
     * `outputFormat`: Currently only json is supported.
+    * `toFile`: Output to a file instead of stdout.
+    * `filePath`: Name of the file where to save the output.
   * `network`:
     * `headers`: Custom headers to be sent with the request.
+    * `privateKeyFile`: PEM formatted file containing the private key for SSL connections.
+    * `certFile`: PEM formatted file containing the certificate for SSL connections.
+    * `timeout`: Timeout for connections in seconds.
+    * `sourceAddress`: The address to use as the source address in connections.

@@ -4,7 +4,11 @@
       "protocol": "http",
       "hostname": "www.example.org",
       "endpoint": "/api",
-      "port": null
+      "port": null,
+      "privateKeyFile": null,
+      "certFile": null,
+      "timeout": null,
+      "sourceAddress": null
     },
     "authentication": {
       "type": "oauth",
@@ -17,7 +21,9 @@
   },
   "client": {
     "verboseLevel": 2,
-    "outputFormat": "json"
+    "outputFormat": "json",
+    "toFile": false,
+    "filePath": null
   },
   "network": {
     "headers": {
