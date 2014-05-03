@@ -4,6 +4,8 @@ from httplib import HTTPConnection, HTTPSConnection, HTTPException
 import urllib
 import pAPItester.util
 import sys
+import base64
+import string
 
 def getArguments():
   parser = argparse.ArgumentParser()
@@ -81,10 +83,21 @@ class ApplicationRequest(object):
       headers['Content-type'] = 'application/x-www-form-urlencoded';
       # Read the JSON encoded data and convert it to URL encoded data.
       data = urllib.urlencode(json.loads(self.__settings['runtime']['data']));
+    self.authentication()
     self.logger.log('Making a request to: ' + self.buildRoute(), self.logger.info)
     self.connection.request(self.__settings['runtime']['method'], self.buildRoute(), data, headers)
     self.logger.log('Getting a response.', self.logger.info)
     return self.getResponse()
+
+  def authentication(self):
+    if self.__settings['host']['authentication']['type'] == 'none':
+      return
+    elif self.__settings['host']['authentication']['type'] == 'basic':
+      # base64 encode the username and password
+      self.logger.log('Authenticating request with basic auth.', self.logger.info)
+      auth_settings = self.__settings['host']['authentication']['settings'];
+      auth = base64.encodestring(auth_settings['username'] + ':' + auth_settings['password']).replace('\n', '')
+      self.__settings['network']['headers']['Authentication'] = auth
 
   def getResponse(self):
     """Get a response from the request."""
