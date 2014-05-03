@@ -1,8 +1,10 @@
 import pAPItester.client
+import pAPItester.util
 import json
 
 def main():
   args = pAPItester.client.getArguments()
+  logger = pAPItester.util.TerminalLogger(2)
   try:
     json_string = open(args.config_file).read()
     conf = json.loads(json_string)
@@ -13,11 +15,11 @@ def main():
     }
     cli = pAPItester.client.ApplicationRequest(conf)
     response = cli.request()
-    print str(response.status) + ' ' + response.reason
-    print response.read()
+    logger.log(response.read(), logger.ok)
 
   except IOError as e:
-    print "I/O error({0}): {1}".format(e.errno, e.strerror)
+    msg = "I/O error({0}): {1}".format(e.errno, e.strerror)
+    logger.log(msg, logger.error)
 
 if __name__ == '__main__':
   main()
