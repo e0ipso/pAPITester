@@ -71,7 +71,7 @@ class ApplicationRequest(object):
     # Set the urlencode header if it's a POST request
     headers = self.__settings['network']['headers'];
     data = None;
-    if self.__settings['runtime']['method'] == 'POST':
+    if self.__settings['runtime']['method'] == 'POST' or self.__settings['runtime']['method'] == 'PUT':
       headers['Content-type'] = 'application/x-www-form-urlencoded';
       # Read the JSON encoded data and convert it to URL encoded data.
       data = urllib.urlencode(json.loads(self.__settings['runtime']['data']));
