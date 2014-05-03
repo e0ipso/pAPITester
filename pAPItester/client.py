@@ -2,11 +2,12 @@ import argparse
 import json
 from httplib import HTTPConnection, HTTPSConnection, HTTPException
 import urllib
+import pAPItester.util
 import sys
 
 def getArguments():
   parser = argparse.ArgumentParser()
-  parser.add_argument('method', help='the HTTP verb to use', choices=['GET', 'POST', 'PUT'])
+  parser.add_argument('method', help='the HTTP verb to use', choices=['GET', 'POST', 'PUT', 'DELETE'])
   parser.add_argument('route', help='the route where to make the request')
   parser.add_argument('--data', help='the data associated to the POST or PUT request. Use JSON encoded.')
   parser.add_argument('-c', '--config-file', help='file where to load settings from', default='./config/settings.json')
@@ -33,7 +34,9 @@ class ApplicationResponse(object):
 
 class ApplicationRequest(object):
   """Wrapper class around urllib2.Request to deal with the application data."""
+
   def __init__(self, settings):
+    self.logger = pAPItester.util.TerminalLogger(settings['client']['verboseLevel'])
     # Set a default for the accept header if none is provided.
     try:
       settings['network']['headers']['Accept']
@@ -42,7 +45,8 @@ class ApplicationRequest(object):
     self.__settings = settings
     # Build the request url
     url = self.buildUrl()
-    print settings['runtime']['method'] + ' ' + url
+    # Log a message.
+    self.logger.log(settings['runtime']['method'] + ' ' + url, self.logger.ok)
     # Create the self.connection property according to the values of the configuration.
     try:
       if (settings['host']['url']['protocol'] == 'https'):
@@ -60,7 +64,9 @@ class ApplicationRequest(object):
     return self.__settings['host']['url']['protocol'] + '://' + self.__settings['host']['url']['hostname'] + ':' + str(port) + self.buildRoute()
 
   def buildRoute(self):
-    return '/' + self.__settings['host']['url']['endpoint'].strip('/') + '/' + self.__settings['runtime']['route']
+    """Generate the absolute route for the request."""
+    route = self.__settings['host']['url']['endpoint'].strip('/') + '/' + self.__settings['runtime']['route']
+    return '/' + route.strip('/')
 
   def alterSettings(self, newSettings):
     """Replace the settings dict entirely by another one."""
@@ -75,9 +81,21 @@ class ApplicationRequest(object):
       headers['Content-type'] = 'application/x-www-form-urlencoded';
       # Read the JSON encoded data and convert it to URL encoded data.
       data = urllib.urlencode(json.loads(self.__settings['runtime']['data']));
+    self.logger.log('Making a request to: ' + self.buildRoute(), self.logger.info)
     self.connection.request(self.__settings['runtime']['method'], self.buildRoute(), data, headers)
-    return self.connection.getresponse()
+    self.logger.log('Getting a response.', self.logger.info)
+    return self.getResponse()
+
+  def getResponse(self):
+    """Get a response from the request."""
+    response = self.connection.getresponse()
+    messageType = self.logger.ok
+    if int(int(response.status) / 100) != 2:
+      messageType = self.logger.error
+    self.logger.log(str(response.status) + ' ' + response.reason, messageType)
+    return response
 
   def __del__(self):
     """Close the connection before object destruction."""
+    self.logger.log('Closed connection with the server.', self.logger.info)
     self.connection.close()
