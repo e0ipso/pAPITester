@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * Implements hook_menu_alter().
+ */
+function hook_menu() {
+  $items['blog'] = array(
+    'title' => 'blogs',
+    'page callback' => 'blog_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+  $items['blog/feed'] = array(
+    …
+  );
+  $items['forum'] = array(
+    …
+  );
+  // Menu items for blog need to be awesome since they
+  // are teated differently than any other section of
+  // the site.
+  massage_blog_menu_items_make_them_awesome($items);
+
+  return $items;
+}
+
